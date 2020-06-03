@@ -22,4 +22,3 @@ if [[ -z "$PLATFORMS" ]]; then
 fi
 
 docker buildx build --platform $PLATFORMS . $*
-docker push wtfo/wtfmta:latest
