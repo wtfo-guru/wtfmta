@@ -78,13 +78,14 @@ postconf -e "smtpd_recipient_restrictions=reject_non_fqdn_recipient,reject_unkno
 if [ -n "POSTFIX_ALLMAILFROM" ]
 then
   MYDOMAIN=`echo $POSTFIX_HOSTNAME | cut -d '.' -f 2-`
+  postconf -e "mydomain=${MYDOMAIN}"
+  postconf -e "myorigin=${MYDOMAIN}"
   GENERIC=/etc/postfix/generic
   echo "@localdomain.local $POSTFIX_ALLMAILFROM" > $GENERIC
+  echo "@${POSTFIX_HOSTNAME} $POSTFIX_ALLMAILFROM" >> $GENERIC
   echo "@${MYDOMAIN} $POSTFIX_ALLMAILFROM" >> $GENERIC
   postconf -e "smtp_generic_maps=hash:${GENERIC}"
   postmap hash:$GENERIC
-else
-  postconf -e "smtp_generic_maps="
 fi
 
 # Use 587 (submission)
